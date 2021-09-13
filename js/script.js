@@ -94,7 +94,7 @@ const icons = [
 		prefix: 'fa-',
 		type: 'user',
 		family: 'fas'
-	}
+	},
 ];
 
 // Milestone 1
@@ -107,30 +107,41 @@ const icons = [
 // Creiamo una select con i tipi di icone e usiamola per filtrare le icone
 
 
-const colors = [];
-
 const types = getArrayOfTypes(icons, 'type');
 
 // La chiamata della funzione imposta l'array -colors- con una lista di colori, in base a quante solo le proprietà univoche all'interno di -icons-
-setRandomColors(colors, types.length);
+const colors = setRandomColors(types.length);
 // console.log (colors);
 
+const coloredIcons = colorIcons(icons, colors, types, 'type');
+
 // Appena carica la pagina, stampa sullo schermo le icone
-printOnScreen(icons);
+printOnScreen(coloredIcons);
 
+printSelection(types);
 
-colorIcons(icons, colors, types, 'type');
+// EVENTO onChange sul Select
+const selezione = document.querySelector('#my_type-select')
+selezione.addEventListener('change', ()=> {
+    // console.log (selezione.value);
+    if(selezione.value == 'all')
+    {
+        printOnScreen(coloredIcons);
+    }else
+    {
+        const listaSelected = filteredArray(coloredIcons, selezione.value);
+        printOnScreen(listaSelected);
+    }
+});
 
-console.table(icons);
-printOnScreen(icons);
 
 /**
  * Funzione per scrivere in HTML il contenuto
  */
 function printOnScreen (array){
     // Mi salvo il riferimento al codice HTML
+   
     const content = document.querySelector('#my_content');
-
     // innerHTML = "" in modo che ogni volta che chiamo la funzione resetta la pagina per non creare più volte lo stesso codice HTML
     content.innerHTML = "";
 
@@ -159,6 +170,33 @@ function printOnScreen (array){
 }
 
 /**
+ * Funzione per scrivere in HTML la lista di opzioni all'interno del select, in base ai tipi di proprietà
+ */
+function printSelection(arrTypes)
+{    
+    // <option value="all">all</option>
+    const content = document.querySelector('#my_type-select');
+    content.innerHTML =`<option value="all">all</option>`;
+    for(const types in arrTypes)
+    {
+        // console.log(types);
+        content.innerHTML += `<option value="${arrTypes[types]}">${arrTypes[types]}</option>`;
+    }
+}
+
+/**Funzione per filtrare un array così che restituisca una lista di valori che corrispondono ad una precisa proprietà */
+function filteredArray (array, proprietà)
+{
+    // console.log(proprietà);
+    const newArray = array.filter(element => {
+        // console.log(element.type);
+        return element.type == proprietà;
+    });
+    // console.table(newArray);
+    return newArray;
+}
+
+/**
  * Funzione che dato una lista di oggetti, restituisce un array contenente la lista univoca di una delle proprietà
  */
 function getArrayOfTypes(array, proprietà)
@@ -177,27 +215,35 @@ function getArrayOfTypes(array, proprietà)
 }
 
 /**
- * Funzione per impostare una serie di colori come valori di un array
- * Un numero di volte pari a -times-
+ * Funzione che restituisce un array con una lista di colori 
+ * pari al numero di volte di -times-
  */
-function setRandomColors(array, times)
+function setRandomColors(times)
 {
+    const newArray = [];
     // Calcola un valore casuale in esadecimale nel range da #000000 a #FFFFFF
     for(let i = 0; i < times; i++)
     {
-        array.push('#' + Math.floor(Math.random()*16777215).toString(16) );
+        newArray.push('#' + Math.floor(Math.random()*16777215).toString(16) );
     } 
+    return newArray;
 }
 
 /**
- * Funzione per aggiungere una proprietà ad un array di oggetti
+ * Funzione per creare un array con una proprietà nuova ad un array di oggetti
  */
 function colorIcons (arrayIcons, arrayColors, arrTypes, proprietà )
 {
+    const newArray = [];
+
     arrayIcons.forEach(element => {
-        
+        const obj = {...element};
         const index = arrTypes.indexOf(element[proprietà]);
 
-        element.color = arrayColors[index];
+        obj.color = arrayColors[index];
+
+        newArray.push(obj);
     });
+    
+    return newArray;
 }
