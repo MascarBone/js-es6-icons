@@ -161,11 +161,13 @@ function printOnScreen (array){
         // content.append(tag);
         
         content.innerHTML += `
-        <div class="col">
-            <i class="${family} ${prefix}${name}" style="color:${color}"></i>
-            <h4 class="text-uppercase">${name}</h4>
+        <div class="col mb-5">
+            <div class="box-icon">
+                <i class="${family} ${prefix}${name} fa-3x" style="color:${color}"></i>
+                <h4 class="text-uppercase">${name}</h4>
+            </div>
         </div>
-        `
+        `;
     });
 }
 
