@@ -236,16 +236,25 @@ function setRandomColors(times)
  */
 function colorIcons (arrayIcons, arrayColors, arrTypes, proprietà )
 {
-    const newArray = [];
+    const newArray = arrayIcons.map(element => {
 
-    arrayIcons.forEach(element => {
-        const obj = {...element};
         const index = arrTypes.indexOf(element[proprietà]);
 
-        obj.color = arrayColors[index];
+		element.color = arrayColors[index];
 
-        newArray.push(obj);
-    });
+		return element;
+	});
+	console.table(newArray);
+
+	// const newArray = [];
+    // arrayIcons.forEach(element => {
+    //     const obj = {...element};
+    //     const index = arrTypes.indexOf(element[proprietà]);
+
+    //     obj.color = arrayColors[index];
+
+    //     newArray.push(obj);
+    // });
     
     return newArray;
 }
